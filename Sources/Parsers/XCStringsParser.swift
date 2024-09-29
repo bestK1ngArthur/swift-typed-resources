@@ -1,0 +1,173 @@
+//
+//  XCStringsParser.swift
+//  swift-typed-resources
+//
+//  Created by Artem Belkov on 08.09.2024.
+//  Copyright © 2024 Artem Belkov. All rights reserved.
+//
+
+import Foundation
+import SwiftTypedResourcesModels
+
+struct XCStringsParser {
+
+    func parse(_ data: Data) throws -> LocalizableStrings {
+        guard let raw = try JSONSerialization.jsonObject(with: data) as? Raw else {
+            throw ParserError.invalidFormat
+        }
+
+        return LocalizableStrings(
+            sourceLanguage: try parseSourceLanguage(from: raw),
+            strings: try parseStrings(from: raw)
+        )
+    }
+
+    private func parseSourceLanguage(from raw: Raw) throws -> LanguageCode {
+        guard let rawValue = raw["sourceLanguage"] as? String else {
+            throw ParserError.missedRequiredField
+        }
+
+        return .init(rawValue: rawValue)
+    }
+
+    private func parseStrings(from raw: Raw) throws -> [String: LocalizableString] {
+        guard let rawStrings = raw["strings"] as? Raw else {
+            throw ParserError.missedRequiredField
+        }
+
+        return try rawStrings.mapValues { raw in
+            guard let raw = raw as? Raw else {
+                throw ParserError.invalidFormat
+            }
+
+            return try parseString(from: raw)
+        }
+    }
+
+    private func parseString(from raw: Raw) throws -> LocalizableString {
+        guard
+            let rawExtractionState = raw["extractionState"] as? String,
+            let rawLocalizations = raw["localizations"] as? Raw
+        else {
+            throw ParserError.missedRequiredField
+        }
+
+        let extractionState = ExtractionState(rawValue: rawExtractionState) ?? .unsupported
+
+        return .init(
+            extractionState: extractionState,
+            localizations: try parseLocalizations(from: rawLocalizations)
+        )
+    }
+
+    private func parseLocalizations(from raw: Raw) throws -> [LanguageCode: Localization] {
+        var localizations: [LanguageCode: Localization] = [:]
+        for rawLanguageCode in raw.keys {
+            guard let rawLocalization = raw[rawLanguageCode] as? Raw else {
+                throw ParserError.missedRequiredField
+            }
+
+            let languageCode = LanguageCode(rawValue: rawLanguageCode)
+            let localization = try parseLocalization(from: rawLocalization)
+
+            localizations[languageCode] = localization
+        }
+
+        return localizations
+    }
+
+    private func parseLocalization(from raw: Raw) throws -> Localization {
+        if let rawVariations = raw["variations"] as? Raw {
+            let variations = try parseVariations(from: rawVariations)
+            return .variated(variations)
+        } else {
+            let unit = try parseUnit(from: raw)
+            return .default(unit)
+        }
+    }
+
+    private func parseVariations(from raw: Raw) throws -> Variations {
+        if let rawPlural = raw["plural"] as? Raw {
+            var variations: [Plural: Unit] = [:]
+            for rawPluralValue in rawPlural.keys {
+                guard let rawUnit = rawPlural[rawPluralValue] as? Raw else {
+                    throw ParserError.missedRequiredField
+                }
+
+                guard let plural = Plural(rawValue: rawPluralValue) else {
+                    throw ParserError.invalidFormat
+                }
+
+                let unit = try parseUnit(from: rawUnit)
+                variations[plural] = unit
+            }
+            return .byPlural(variations)
+        } else if let rawDevice = raw["device"] as? Raw {
+            var variations: [Device: Unit] = [:]
+            for rawDeviceValue in rawDevice.keys {
+                guard let rawUnit = rawDevice[rawDeviceValue] as? Raw else {
+                    throw ParserError.missedRequiredField
+                }
+
+                guard let device = Device(rawValue: rawDeviceValue) else {
+                    throw ParserError.invalidFormat
+                }
+
+                let unit = try parseUnit(from: rawUnit)
+                variations[device] = unit
+            }
+            return .byDevice(variations)
+        } else {
+            throw ParserError.unsupportedVariationType
+        }
+    }
+
+    private func parseUnit(from raw: Raw) throws -> Unit {
+        if let rawStringUnit = raw["stringUnit"] as? Raw {
+            let stringUnit = try parseStringUnit(from: rawStringUnit)
+            return .string(stringUnit)
+        } else {
+            throw ParserError.unsupportedLocalizationUnit
+        }
+    }
+
+    private func parseStringUnit(from raw: Raw) throws -> StringUnit {
+        guard
+            let rawState = raw["state"] as? String,
+            let value = raw["value"] as? String
+        else {
+            throw ParserError.missedRequiredField
+        }
+
+        let state = StringUnit.State(rawValue: rawState) ?? .unsupported
+
+        return .init(
+            state: state,
+            value: value
+        )
+    }
+}
+
+extension XCStringsParser {
+
+    enum ParserError: Error {
+        case invalidFormat
+        case missedRequiredField
+        case unsupportedVariationType
+        case unsupportedLocalizationUnit
+    }
+}
+
+private extension XCStringsParser {
+
+    typealias Raw = [String: Any]
+    typealias LanguageCode = LocalizableStrings.LanguageCode
+    typealias LocalizableString = LocalizableStrings.LocalizableString
+    typealias ExtractionState = LocalizableString.ExtractionState
+    typealias Localization = LocalizableString.Localization
+    typealias Variations = Localization.Variations
+    typealias Plural = Localization.Plural
+    typealias Device = Localization.Device
+    typealias Unit = Localization.Unit
+    typealias StringUnit = Localization.StringUnit
+}

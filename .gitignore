@@ -1,0 +1,35 @@
+# Swift Package Manager
+.build/
+Package.resolved
+
+# Xcode
+*.xcworkspace
+*.xcodeproj/
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+DerivedData/
+
+# Build artifacts
+*.o
+*.dSYM
+*.swp
+*.swo
+*.tmp
+
+# SwiftPM artifacts
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
+
+# Logs
+*.log
+
+# macOS system files
+.DS_Store
+
+# Other files
+*.zip
+*.tar.gz
+*.tgz
+*.tgz
