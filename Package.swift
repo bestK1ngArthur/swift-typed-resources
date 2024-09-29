@@ -52,6 +52,11 @@ let package = Package(
             name: "SwiftTypedResourcesParsersTests",
             dependencies: ["SwiftTypedResourcesParsers"],
             path: "Tests/Parsers"
+        ),
+        .testTarget(
+            name: "SwiftTypedResourcesGeneratorsTests",
+            dependencies: ["SwiftTypedResourcesGenerators"],
+            path: "Tests/Generators"
         )
     ]
 )

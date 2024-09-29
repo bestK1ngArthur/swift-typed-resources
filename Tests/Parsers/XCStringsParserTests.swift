@@ -11,9 +11,11 @@
 import SwiftTypedResourcesModels
 import Testing
 
-@Suite("`.xcstrings` Parser Tests") struct XCStringsParserTests {
+@Suite("`.xcstrings` Parser Tests")
+struct XCStringsParserTests {
 
-    @Test func parseDefault() throws {
+    @Test
+    func parseDefault() throws {
         let parser = XCStringsParser()
         let data = """
         {
@@ -33,7 +35,7 @@ import Testing
             }
         }
         """.data(using: .utf8)!
-        let right = LocalizableStrings(
+        let expected = LocalizableStrings(
             sourceLanguage: .init(rawValue: "en"),
             strings: ["testKey": .init(
                 extractionState: .manual,
@@ -47,11 +49,12 @@ import Testing
                 )]
             )]
         )
-        let expected = try parser.parse(data)
-        #expect(expected == right)
+        let real = try parser.parse(data)
+        #expect(expected == real)
     }
 
-    @Test func parseVariatedByPlural() throws {
+    @Test
+    func parseVariatedByPlural() throws {
         let parser = XCStringsParser()
         let data = """
         {
@@ -101,7 +104,7 @@ import Testing
             }
         }
         """.data(using: .utf8)!
-        let right = LocalizableStrings(
+        let expected = LocalizableStrings(
             sourceLanguage: .init(rawValue: "en"),
             strings: ["testKey": .init(
                 extractionState: .migrated,
@@ -116,7 +119,7 @@ import Testing
                 )]
             )]
         )
-        let expected = try parser.parse(data)
-        #expect(expected == right)
+        let real = try parser.parse(data)
+        #expect(expected == real)
     }
 }
