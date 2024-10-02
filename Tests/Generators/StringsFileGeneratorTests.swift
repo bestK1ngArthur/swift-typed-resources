@@ -12,7 +12,7 @@ import Foundation
 import SwiftTypedResourcesModels
 import Testing
 
-@Suite("String's file Generator Tests")
+@Suite("String's File Generator Tests")
 struct StringsFileGeneratorTests {
 
     @Test

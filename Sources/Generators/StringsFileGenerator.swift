@@ -20,27 +20,26 @@ public struct StringsFileGenerator {
 
         var fileContent = formattedHeader(fileName: fileName, date: Date())
         fileContent += newLine
-
-        for resource in resources {
-            fileContent += generateFileContent(for: resource, markMode: markMode)
-        }
+        fileContent += generateFileContent(for: resources, markMode: markMode)
 
         return fileContent
     }
 
-    private func generateFileContent(for resource: StringsResource, markMode: MarkMode) -> FileContent {
-        var stringsKeys: [String] = []
-        var stringsWithArgumentsKeys: [String] = []
+    private func generateFileContent(for resources: StringsResources, markMode: MarkMode) -> FileContent {
+        var stringsKeys: [(key: String, fileName: String)] = []
+        var stringsWithArgumentsKeys: [(key: String, fileName: String)] = []
 
-        for (key, string) in resource.strings.strings {
-            guard let localization = string.localizations.first?.value else {
-                continue
-            }
+        for resource in resources {
+            for (key, string) in resource.strings.strings {
+                guard let localization = string.localizations.first?.value else {
+                    continue
+                }
 
-            if case .variated(.byPlural) = localization {
-                stringsWithArgumentsKeys.append(key)
-            } else {
-                stringsKeys.append(key)
+                if case .variated(.byPlural) = localization {
+                    stringsWithArgumentsKeys.append((key, resource.table))
+                } else {
+                    stringsKeys.append((key, resource.table))
+                }
             }
         }
 
@@ -49,7 +48,6 @@ public struct StringsFileGenerator {
             fileContent += newLine
             fileContent += generateExtensionContent(
                 for: stringsKeys,
-                fileName: resource.table,
                 extensionName: "TypedStrings",
                 markMode: markMode
             )
@@ -63,7 +61,6 @@ public struct StringsFileGenerator {
             fileContent += newLine
             fileContent += generateExtensionContent(
                 for: stringsWithArgumentsKeys,
-                fileName: resource.table,
                 extensionName: "TypedStringsWithArguments",
                 markMode: markMode
             )
@@ -73,20 +70,21 @@ public struct StringsFileGenerator {
     }
 
     private func generateExtensionContent(
-        for keys: [String],
-        fileName: String,
+        for keys: [(key: String, fileName: String)],
         extensionName: String,
         markMode: MarkMode
     ) -> FileContent {
         let groupedValues: GroupedValues
         switch markMode {
             case .byFile:
-                let sortedValues = keys
-                    .sorted()
-                    .map { (name: "\(fileName.firstCharacterLowercased())\($0.varName.firstCharacterUppercased())", key: $0) }
-                groupedValues = [fileName.capitalized: sortedValues]
+                groupedValues = Dictionary(grouping: keys, by: { $0.fileName.capitalized }).mapValues { keys in
+                    keys
+                        .sorted { $0.key < $1.key }
+                        .map { (name: "\($0.fileName.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())", key: $0.key) }
+                }
 
             case .byKeyDelimeter:
+                let keys = keys.map(\.key)
                 groupedValues = Dictionary(grouping: keys, by: { $0.group?.capitalized }).mapValues { keys in
                     keys
                         .sorted()
