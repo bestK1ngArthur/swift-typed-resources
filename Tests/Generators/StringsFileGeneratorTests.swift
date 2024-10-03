@@ -183,4 +183,6 @@ struct StringsFileGeneratorTests {
         let real = generator.generateFileContent(for: resources)
         #expect(expected == real)
     }
+
+    // TODO: Add tests for different mark modes
 }

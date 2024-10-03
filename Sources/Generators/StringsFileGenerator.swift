@@ -19,22 +19,24 @@ public struct StringsFileGenerator {
 
     public func generateFileContent(
         for resources: StringsResources,
-        markMode: MarkMode? = nil
+        markMode: MarkMode? = .automatic
     ) -> FileContent {
-        let markMode: MarkMode = if let markMode {
-            markMode
-        } else {
-            resources.count > 1 ? .byTable : .byKeyDelimeter
+        var markMode = markMode
+        if markMode == .automatic {
+            markMode = resources.count > 1 ? .byTable : .byKeyDelimeter
         }
 
         var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
         fileContent += newLine
-        fileContent += generateFileContent(for: resources, markMode: markMode)
+        fileContent += generateMainContent(for: resources, markMode: markMode)
 
         return fileContent
     }
 
-    private func generateFileContent(for resources: StringsResources, markMode: MarkMode) -> FileContent {
+    private func generateMainContent(
+        for resources: StringsResources,
+        markMode: MarkMode?
+    ) -> FileContent {
         var stringsKeys: [(key: String, table: String)] = []
         var stringsWithArgumentsKeys: [(key: String, table: String)] = []
 
@@ -81,7 +83,7 @@ public struct StringsFileGenerator {
     private func generateExtensionContent(
         for keys: [(key: String, table: String)],
         extensionName: String,
-        markMode: MarkMode
+        markMode: MarkMode?
     ) -> FileContent {
         let groupedValues: GroupedValues
         switch markMode {
@@ -107,6 +109,9 @@ public struct StringsFileGenerator {
                         .sorted()
                         .map { (name: $0.varName, key: $0) }
                 }
+
+            default:
+                groupedValues = [nil: keys.map { ($0.key.varName, $0.key) }]
         }
 
         let valuesContent = generateValuesContent(for: groupedValues)
@@ -157,6 +162,7 @@ extension StringsFileGenerator {
     public enum MarkMode {
         case byTable
         case byKeyDelimeter
+        case automatic
     }
 
     private typealias GroupedValues = [String?: [(name: String, key: String)]]

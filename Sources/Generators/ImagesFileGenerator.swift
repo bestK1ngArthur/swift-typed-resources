@@ -9,6 +9,7 @@
 import Foundation
 import SwiftTypedResourcesModels
 
+// TODO: Add tests
 public struct ImagesFileGenerator {
 
     public typealias FileContent = String
@@ -18,7 +19,7 @@ public struct ImagesFileGenerator {
     public init() {}
 
     func generateFileContent(
-        from resources: ImagesResources,
+        for resources: ImagesResources,
         markMode: MarkMode? = .automatic
     ) -> FileContent {
         var markMode = markMode
@@ -28,12 +29,15 @@ public struct ImagesFileGenerator {
 
         var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
         fileContent += newLine
-        fileContent += generateExtensionContent(from: resources, markMode: markMode)
+        fileContent += generateExtensionContent(for: resources, markMode: markMode)
 
         return fileContent
     }
 
-    private func generateExtensionContent(from resources: ImagesResources, markMode: MarkMode?) -> FileContent {
+    private func generateExtensionContent(
+        for resources: ImagesResources,
+        markMode: MarkMode?
+    ) -> FileContent {
         let values = getValues(from: resources, markMode: markMode)
         let groupedValues: GroupedValues
         switch markMode {
