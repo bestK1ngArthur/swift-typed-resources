@@ -16,12 +16,12 @@ public struct ImagesResource: Equatable {
     }
 
     public struct Folder: Equatable {
-        let name: String
-        let assets: [String: Asset]
+        public let name: String
+        public let assets: [String: Asset]
     }
 
     public struct ImageAsset: Equatable {
-        let fileName: String
+        public let fileName: String
     }
 
     public let table: String

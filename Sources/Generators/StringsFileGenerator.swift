@@ -13,12 +13,21 @@ public struct StringsFileGenerator {
 
     public typealias FileContent = String
 
+    private static let fileName = "Strings"
+
     public init() {}
 
-    public func generateFileContent(for resources: StringsResources) -> FileContent {
-        let markMode: MarkMode = resources.count > 1 ? .byFile : .byKeyDelimeter
+    public func generateFileContent(
+        for resources: StringsResources,
+        markMode: MarkMode? = nil
+    ) -> FileContent {
+        let markMode: MarkMode = if let markMode {
+            markMode
+        } else {
+            resources.count > 1 ? .byTable : .byKeyDelimeter
+        }
 
-        var fileContent = formattedHeader(fileName: fileName, date: Date())
+        var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
         fileContent += newLine
         fileContent += generateFileContent(for: resources, markMode: markMode)
 
@@ -26,8 +35,8 @@ public struct StringsFileGenerator {
     }
 
     private func generateFileContent(for resources: StringsResources, markMode: MarkMode) -> FileContent {
-        var stringsKeys: [(key: String, fileName: String)] = []
-        var stringsWithArgumentsKeys: [(key: String, fileName: String)] = []
+        var stringsKeys: [(key: String, table: String)] = []
+        var stringsWithArgumentsKeys: [(key: String, table: String)] = []
 
         for resource in resources {
             for (key, string) in resource.strings.strings {
@@ -70,22 +79,30 @@ public struct StringsFileGenerator {
     }
 
     private func generateExtensionContent(
-        for keys: [(key: String, fileName: String)],
+        for keys: [(key: String, table: String)],
         extensionName: String,
         markMode: MarkMode
     ) -> FileContent {
         let groupedValues: GroupedValues
         switch markMode {
-            case .byFile:
-                groupedValues = Dictionary(grouping: keys, by: { $0.fileName.capitalized }).mapValues { keys in
+            case .byTable:
+                groupedValues = Dictionary(
+                    grouping: keys,
+                    by: { $0.table.capitalized }
+                )
+                .mapValues { keys in
                     keys
                         .sorted { $0.key < $1.key }
-                        .map { (name: "\($0.fileName.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())", key: $0.key) }
+                        .map { (name: "\($0.table.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())", key: $0.key) }
                 }
 
             case .byKeyDelimeter:
                 let keys = keys.map(\.key)
-                groupedValues = Dictionary(grouping: keys, by: { $0.group?.capitalized }).mapValues { keys in
+                groupedValues = Dictionary(
+                    grouping: keys,
+                    by: { $0.group?.capitalized }
+                )
+                .mapValues { keys in
                     keys
                         .sorted()
                         .map { (name: $0.varName, key: $0) }
@@ -135,45 +152,12 @@ public struct StringsFileGenerator {
     }
 }
 
-private extension StringsFileGenerator {
+extension StringsFileGenerator {
 
-    enum MarkMode {
-        case byFile
+    public enum MarkMode {
+        case byTable
         case byKeyDelimeter
     }
 
-    typealias GroupedValues = [String?: [(name: String, key: String)]]
-}
-
-fileprivate let fileName = "Strings"
-
-fileprivate func formattedHeader(fileName: String, date: Date) -> String {
-"""
-//
-//  \(fileName).generated.swift
-//  swift-typed-resources
-//
-//  Generated on \(date.formatted(date: .numeric, time: .omitted)).
-//
-"""
-}
-
-fileprivate func formattedExtension(name: String, content: String) -> String {
-"""
-public extension \(name) {
-\(content)
-}
-"""
-}
-
-fileprivate func formattedMark(name: String) -> String {
-"""
-\(intent)// MARK: \(name)
-"""
-}
-
-fileprivate func formattedValue(name: String, value: String) -> String {
-"""
-\(intent)public let \(name) = \"\(value)\"
-"""
+    private typealias GroupedValues = [String?: [(name: String, key: String)]]
 }
