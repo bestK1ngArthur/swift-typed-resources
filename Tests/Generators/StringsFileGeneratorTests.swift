@@ -76,21 +76,21 @@ struct StringsFileGeneratorTests {
         
         public extension TypedStrings {
 
-            var base: String { "base" }
-            var base2: String { "base2" }
+            var base: TypedStringConfig { (key: "base", table: "Strings", bundle: .module) }
+            var base2: TypedStringConfig { (key: "base2", table: "Strings", bundle: .module) }
 
             // MARK: Flex
-            var flexTwo: String { "Flex.Two" }
+            var flexTwo: TypedStringConfig { (key: "Flex.Two", table: "Strings", bundle: .module) }
 
             // MARK: Test
-            var testOne: String { "test-One" }
-            var testThree: String { "Test.Three" }
-            var testTwo: String { "_test_two" }
+            var testOne: TypedStringConfig { (key: "test-One", table: "Strings", bundle: .module) }
+            var testThree: TypedStringConfig { (key: "Test.Three", table: "Strings", bundle: .module) }
+            var testTwo: TypedStringConfig { (key: "_test_two", table: "Strings", bundle: .module) }
         }
         
         public extension TypedStringsWithArguments {
 
-            var pluralOne: String { "PluralOne" }
+            var pluralOne: TypedStringConfig { (key: "PluralOne", table: "Strings", bundle: .module) }
         }
         """
         let real = generator.generateFileContent(
@@ -170,21 +170,21 @@ struct StringsFileGeneratorTests {
         public extension TypedStrings {
 
             // MARK: First
-            var firstDefaultOne: String { "DefaultOne" }
-            var firstDefaultTwo: String { "DefaultTwo" }
+            var firstDefaultOne: TypedStringConfig { (key: "DefaultOne", table: "First", bundle: .module) }
+            var firstDefaultTwo: TypedStringConfig { (key: "DefaultTwo", table: "First", bundle: .module) }
 
             // MARK: Second
-            var secondDefaultOne: String { "DefaultOne" }
-            var secondDefaultTwo: String { "DefaultTwo" }
+            var secondDefaultOne: TypedStringConfig { (key: "DefaultOne", table: "Second", bundle: .module) }
+            var secondDefaultTwo: TypedStringConfig { (key: "DefaultTwo", table: "Second", bundle: .module) }
         }
         
         public extension TypedStringsWithArguments {
 
             // MARK: First
-            var firstPluralOne: String { "PluralOne" }
+            var firstPluralOne: TypedStringConfig { (key: "PluralOne", table: "First", bundle: .module) }
         
             // MARK: Second
-            var secondPluralOne: String { "PluralOne" }
+            var secondPluralOne: TypedStringConfig { (key: "PluralOne", table: "Second", bundle: .module) }
         }
         """
         let real = generator.generateFileContent(

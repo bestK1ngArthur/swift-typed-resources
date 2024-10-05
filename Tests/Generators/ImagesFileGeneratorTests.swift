@@ -42,12 +42,12 @@ struct ImagesFileGeneratorTests {
         
         public extension TypedImages {
 
-            var base: String { "base" }
-            var base2: String { "base2" }
-            var flexTwo: String { "Flex.Two" }
-            var testOne: String { "test-One" }
-            var testThree: String { "Test.Three" }
-            var testTwo: String { "_test_two" }
+            var base: TypedImageConfig { (name: "base", bundle: .module) }
+            var base2: TypedImageConfig { (name: "base2", bundle: .module) }
+            var flexTwo: TypedImageConfig { (name: "Flex.Two", bundle: .module) }
+            var testOne: TypedImageConfig { (name: "test-One", bundle: .module) }
+            var testThree: TypedImageConfig { (name: "Test.Three", bundle: .module) }
+            var testTwo: TypedImageConfig { (name: "_test_two", bundle: .module) }
         }
         """
         let real = generator.generateFileContent(
@@ -97,14 +97,14 @@ struct ImagesFileGeneratorTests {
         public extension TypedImages {
 
             // MARK: One
-            var oneTestOne: String { "oneTest-One" }
-            var oneTestThree: String { "oneTest.Three" }
-            var oneTestTwo: String { "one_test_two" }
+            var oneTestOne: TypedImageConfig { (name: "oneTest-One", bundle: .module) }
+            var oneTestThree: TypedImageConfig { (name: "oneTest.Three", bundle: .module) }
+            var oneTestTwo: TypedImageConfig { (name: "one_test_two", bundle: .module) }
         
             // MARK: Two
-            var twoTestOne: String { "twoTest-One" }
-            var twoTestThree: String { "twoTest.Three" }
-            var twoTestTwo: String { "two_test_two" }
+            var twoTestOne: TypedImageConfig { (name: "twoTest-One", bundle: .module) }
+            var twoTestThree: TypedImageConfig { (name: "twoTest.Three", bundle: .module) }
+            var twoTestTwo: TypedImageConfig { (name: "two_test_two", bundle: .module) }
         }
         """
         let real = generator.generateFileContent(
@@ -147,14 +147,14 @@ struct ImagesFileGeneratorTests {
         public extension TypedImages {
 
             // MARK: One
-            var oneTestOne: String { "test-One" }
-            var oneTestThree: String { "Test.Three" }
-            var oneTestTwo: String { "_test_two" }
+            var oneTestOne: TypedImageConfig { (name: "test-One", bundle: .module) }
+            var oneTestThree: TypedImageConfig { (name: "Test.Three", bundle: .module) }
+            var oneTestTwo: TypedImageConfig { (name: "_test_two", bundle: .module) }
 
             // MARK: Two
-            var twoTestOne: String { "test-One" }
-            var twoTestThree: String { "Test.Three" }
-            var twoTestTwo: String { "_test_two" }
+            var twoTestOne: TypedImageConfig { (name: "test-One", bundle: .module) }
+            var twoTestThree: TypedImageConfig { (name: "Test.Three", bundle: .module) }
+            var twoTestTwo: TypedImageConfig { (name: "_test_two", bundle: .module) }
         }
         """
         let real = generator.generateFileContent(
