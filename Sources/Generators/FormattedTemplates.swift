@@ -11,7 +11,7 @@ import Foundation
 func formattedHeader(fileName: String, date: Date) -> String {
 """
 //
-//  \(fileName).generated.swift
+//  \(fileName)
 //  swift-typed-resources
 //
 //  Generated on \(date.formatted(date: .numeric, time: .omitted)).

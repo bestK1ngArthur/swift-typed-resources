@@ -13,12 +13,11 @@ public struct StringsFileGenerator {
 
     public typealias FileContent = String
 
-    private static let fileName = "Strings"
-
     public init() {}
 
     public func generateFileContent(
         for resources: StringsResources,
+        fileName: String,
         markMode: MarkMode? = .automatic
     ) -> FileContent {
         var markMode = markMode
@@ -26,7 +25,7 @@ public struct StringsFileGenerator {
             markMode = resources.count > 1 ? .byTable : .byKeyDelimeter
         }
 
-        var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
+        var fileContent = formattedHeader(fileName: fileName, date: Date())
         fileContent += newLine
         fileContent += generateMainContent(for: resources, markMode: markMode)
 

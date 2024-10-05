@@ -10,15 +10,15 @@ import Foundation
 import SwiftTypedResourcesModels
 
 // TODO: Add tests
-struct XCAssetsParser {
+public struct XCAssetsParser {
 
     private let fileManager: FileManager
 
-    init(fileManager: FileManager) {
+    public init(fileManager: FileManager) {
         self.fileManager = fileManager
     }
 
-    func parse(at url: URL) throws -> ImagesResource {
+    public func parse(at url: URL) throws -> ImagesResource {
         let assets = try parseAssets(at: url)
         return .init(
             table: url.lastPathComponent,
@@ -69,7 +69,7 @@ struct XCAssetsParser {
 
 extension XCAssetsParser {
 
-    enum ParserError: Error {
+    public enum ParserError: Error {
         case unsupportedAssetType
     }
 }

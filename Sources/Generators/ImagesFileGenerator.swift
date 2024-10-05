@@ -13,12 +13,11 @@ public struct ImagesFileGenerator {
 
     public typealias FileContent = String
 
-    private static let fileName = "Images"
-
     public init() {}
 
-    func generateFileContent(
+    public func generateFileContent(
         for resources: ImagesResources,
+        fileName: String,
         markMode: MarkMode? = .automatic
     ) -> FileContent {
         var markMode = markMode
@@ -26,7 +25,7 @@ public struct ImagesFileGenerator {
             markMode = resources.count > 1 ? .byTable : .byParentFolder
         }
 
-        var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
+        var fileContent = formattedHeader(fileName: fileName, date: Date())
         fileContent += newLine
         fileContent += newLine
         fileContent += generateExtensionContent(for: resources, markMode: markMode)

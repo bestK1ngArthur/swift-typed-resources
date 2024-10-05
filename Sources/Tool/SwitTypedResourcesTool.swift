@@ -27,23 +27,23 @@ struct SwiftTypedResourcesTool: ParsableCommand {
     public var path: String
 
     public func run() throws {
-        guard let inputPath = URL(string: path) else {
-            throw ArgumentParser.ValidationError("Invalid path")
-        }
+        let inputPath = URL(fileURLWithPath: path)
 
         let outputPath = inputPath.appendingPathComponent("Generated")
-        if !Self.folderExists(at: outputPath) {
+        if !outputPath.hasDirectoryPath {
+            print("Folder created")
             try Self.fileManager.createDirectory(
                 at: outputPath,
                 withIntermediateDirectories: false
             )
         }
 
-        try Self.generateStrings(from: inputPath, to: outputPath)
+        if resources.contains(.strings) {
+            try Self.generateStrings(from: inputPath, to: outputPath)
+        }
 
-        print("Path is \(path)")
-        resources.forEach { resource in
-            print("Generate \(resource.rawValue)")
+        if resources.contains(.images) {
+            try Self.generateImages(from: inputPath, to: outputPath)
         }
     }
 
@@ -54,7 +54,10 @@ struct SwiftTypedResourcesTool: ParsableCommand {
     private static func generateStrings(from inputPath: URL, to outputPath: URL) throws {
         let fileURLs = findFiles(withExtension: "xcstrings", at: inputPath)
 
-        guard !fileURLs.isEmpty else { return }
+        guard !fileURLs.isEmpty else {
+            print("No string resource files found")
+            return
+        }
 
         let parser = XCStringsParser()
         let resources: StringsResources = fileURLs.compactMap { fileURL in
@@ -72,8 +75,33 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         }
 
         let generator = StringsFileGenerator()
-        let fileContent = generator.generateFileContent(for: resources)
-        let fileURL = outputPath.appending("TypedStrings.swift")
+        let fileName = "TypedStrings.swift"
+        let fileContent = generator.generateFileContent(for: resources, fileName: fileName)
+        let fileURL = outputPath.appending(fileName)
+        try fileContent.write(
+            to: fileURL,
+            atomically: true,
+            encoding: .utf8
+        )
+    }
+
+    private static func generateImages(from inputPath: URL, to outputPath: URL) throws {
+        let fileURLs = findFiles(withExtension: "xcassets", at: inputPath)
+
+        guard !fileURLs.isEmpty else {
+            print("No image resource files found")
+            return
+        }
+
+        let parser = XCAssetsParser(fileManager: fileManager)
+        let resources: ImagesResources = fileURLs.compactMap { fileURL in
+            try? parser.parse(at: fileURL)
+        }
+
+        let generator = ImagesFileGenerator()
+        let fileName = "TypedImages.swift"
+        let fileContent = generator.generateFileContent(for: resources, fileName: fileName)
+        let fileURL = outputPath.appending(fileName)
         try fileContent.write(
             to: fileURL,
             atomically: true,
@@ -86,11 +114,11 @@ struct SwiftTypedResourcesTool: ParsableCommand {
             var results: [URL] = []
             let items = try fileManager.contentsOfDirectory(at: path, includingPropertiesForKeys: nil, options: [])
             for item in items {
-                if item.hasDirectoryPath {
+                if item.pathExtension == fileExtension {
+                    results.append(item)
+                } else if item.hasDirectoryPath {
                     let subResults = findFiles(withExtension: fileExtension, at: item)
                     results.append(contentsOf: subResults)
-                } else if item.pathExtension == fileExtension {
-                    results.append(item)
                 }
             }
             return results
