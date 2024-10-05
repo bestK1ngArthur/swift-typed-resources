@@ -9,7 +9,6 @@
 import Foundation
 import SwiftTypedResourcesModels
 
-// TODO: Add tests
 public struct ImagesFileGenerator {
 
     public typealias FileContent = String
@@ -28,6 +27,7 @@ public struct ImagesFileGenerator {
         }
 
         var fileContent = formattedHeader(fileName: Self.fileName, date: Date())
+        fileContent += newLine
         fileContent += newLine
         fileContent += generateExtensionContent(for: resources, markMode: markMode)
 
@@ -48,7 +48,6 @@ public struct ImagesFileGenerator {
                 )
                 .mapValues { keys in
                     keys
-                        .sorted { $0.value < $1.value }
                         .map {
                             let varName = $0.value.varName
                             let name = if let group = $0.group {
@@ -58,6 +57,7 @@ public struct ImagesFileGenerator {
                             }
                             return (name: name, value: $0.value)
                         }
+                        .sorted { $0.name < $1.name }
                 }
 
             case .byParentFolder:
@@ -67,12 +67,15 @@ public struct ImagesFileGenerator {
                 )
                 .mapValues { values in
                     values
-                        .sorted { $0.value < $1.value }
                         .map { (name: $0.value.varName, value: $0.value) }
+                        .sorted { $0.name < $1.name }
                 }
 
             default:
-                groupedValues = [nil: values.map { ($0.value.varName, $0.value) }]
+                let values = values
+                    .map { (name: $0.value.varName, value: $0.value) }
+                    .sorted { $0.name < $1.name }
+                groupedValues = [nil: values]
         }
 
         let valuesContent = generateValuesContent(for: groupedValues)

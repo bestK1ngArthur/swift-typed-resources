@@ -18,10 +18,19 @@ public struct ImagesResource: Equatable {
     public struct Folder: Equatable {
         public let name: String
         public let assets: [String: Asset]
+
+        public init(name: String, assets: [String : Asset]) {
+            self.name = name
+            self.assets = assets
+        }
     }
 
     public struct ImageAsset: Equatable {
         public let fileName: String
+
+        public init(fileName: String) {
+            self.fileName = fileName
+        }
     }
 
     public let table: String

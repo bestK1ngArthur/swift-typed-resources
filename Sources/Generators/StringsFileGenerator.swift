@@ -94,8 +94,8 @@ public struct StringsFileGenerator {
                 )
                 .mapValues { keys in
                     keys
-                        .sorted { $0.key < $1.key }
                         .map { (name: "\($0.table.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())", key: $0.key) }
+                        .sorted { $0.name < $1.name }
                 }
 
             case .byKeyDelimeter:
@@ -106,12 +106,15 @@ public struct StringsFileGenerator {
                 )
                 .mapValues { keys in
                     keys
-                        .sorted()
                         .map { (name: $0.varName, key: $0) }
+                        .sorted { $0.name < $1.name }
                 }
 
             default:
-                groupedValues = [nil: keys.map { ($0.key.varName, $0.key) }]
+                let keys = keys
+                    .map { (name: $0.key.varName, key: $0.key) }
+                    .sorted { $0.name < $1.name }
+                groupedValues = [nil: keys]
         }
 
         let valuesContent = generateValuesContent(for: groupedValues)

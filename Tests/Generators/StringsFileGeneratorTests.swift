@@ -15,9 +15,10 @@ import Testing
 @Suite("String's File Generator Tests")
 struct StringsFileGeneratorTests {
 
+    private let generator = StringsFileGenerator()
+
     @Test
-    func generateOneTable() throws {
-        let generator = StringsFileGenerator()
+    func generate_oneTable() throws {
         let string = LocalizableStrings.LocalizableString(
             extractionState: .manual,
             localizations: [
@@ -80,9 +81,9 @@ struct StringsFileGeneratorTests {
             public let flexTwo = "Flex.Two"
 
             // MARK: Test
+            public let testOne = "test-One"
             public let testThree = "Test.Three"
             public let testTwo = "_test_two"
-            public let testOne = "test-One"
         }
         
         public extension TypedStringsWithArguments {
@@ -95,8 +96,7 @@ struct StringsFileGeneratorTests {
     }
 
     @Test
-    func generateFewTables() throws {
-        let generator = StringsFileGenerator()
+    func generate_fewTables() throws {
         let string = LocalizableStrings.LocalizableString(
             extractionState: .manual,
             localizations: [
@@ -183,6 +183,4 @@ struct StringsFileGeneratorTests {
         let real = generator.generateFileContent(for: resources)
         #expect(expected == real)
     }
-
-    // TODO: Add tests for different mark modes
 }
