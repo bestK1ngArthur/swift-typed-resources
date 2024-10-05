@@ -1,5 +1,5 @@
 //
-//  GenerateResources.swift
+//  GenerateResourcesCommand.swift.swift
 //  swift-typed-resources
 //
 //  Created by Artem Belkov on 29.09.2024.
@@ -7,20 +7,57 @@
 //
 
 import Foundation
-
-/*
 import PackagePlugin
 
 @main
-struct GenerateResources: CommandPlugin {
+struct GenerateResourcesCommand: CommandPlugin {
 
-    func performCommand(context: PackagePlugin.PluginContext, arguments: [String]) async throws {
-        let packagePath = context.package.directory
+    private let fileManager: FileManager = .default
+
+    func performCommand(context: PluginContext, arguments: [String]) async throws {
+
+        let tool = try context.tool(named: "SwiftTypedResourcesTool")
+
+        let packagePath = URL(fileURLWithPath: context.pluginWorkDirectory.string)
 
         try generateStrings(packagePath: packagePath)
-        try generateImages(packagePath: packagePath)
+        //        try generateImages(packagePath: packagePath)
     }
 
+    private func generateStrings(packagePath: URL) throws {
+        let fileURLs = findFiles(withExtension: "xcstrings", at: packagePath)
+        guard !fileURLs.isEmpty else { return }
+
+//        let stringsParser = XCAs
+//        for fileURL in fileURLs {
+//
+//        }
+    }
+
+    private func findFiles(withExtension fileExtension: String, at path: URL) -> [URL] {
+        do {
+            var results: [URL] = []
+            let items = try fileManager.contentsOfDirectory(at: path, includingPropertiesForKeys: nil, options: [])
+            for item in items {
+                if item.hasDirectoryPath {
+                    let subResults = findFiles(withExtension: fileExtension, at: item)
+                    results.append(contentsOf: subResults)
+                } else if item.pathExtension == fileExtension {
+                    results.append(item)
+                }
+            }
+            return results
+        } catch {
+            // FIXME: Throw error
+            fatalError("Error reading contents of directory: \(error.localizedDescription)")
+        }
+    }
+
+
+}
+
+
+/*
     // MARK: Sources
 
     private let sourcesPath = "Sources"

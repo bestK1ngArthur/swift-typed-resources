@@ -31,13 +31,9 @@ struct XCAssetsParser {
 
         let assetKeys = try fileManager.contentsOfDirectory(atPath: url.path)
         for assetKey in assetKeys {
-            let assetURL = if #available(iOS 16.0, *) {
-                url.appending(component: assetKey)
-            } else {
-                URL(string: "\(url)/\(assetKey)")
-            }
+            let assetURL = url.appending(assetKey)
 
-            guard let assetURL, checkFolder(at: assetURL) else {
+            guard checkFolder(at: assetURL) else {
                 continue
             }
 
@@ -75,5 +71,16 @@ extension XCAssetsParser {
 
     enum ParserError: Error {
         case unsupportedAssetType
+    }
+}
+
+public extension URL {
+
+    func appending(_ component: String) -> Self {
+        if #available(iOS 16.0, *) {
+            appending(component: component)
+        } else {
+            URL(fileURLWithPath: "\(path)/\(component)")
+        }
     }
 }

@@ -9,9 +9,11 @@
 import Foundation
 import SwiftTypedResourcesModels
 
-struct XCStringsParser {
+public struct XCStringsParser {
 
-    func parse(_ data: Data) throws -> LocalizableStrings {
+    public init() {}
+
+    public func parse(_ data: Data) throws -> LocalizableStrings {
         guard let raw = try JSONSerialization.jsonObject(with: data) as? Raw else {
             throw ParserError.invalidFormat
         }
@@ -150,24 +152,21 @@ struct XCStringsParser {
 
 extension XCStringsParser {
 
-    enum ParserError: Error {
+    public enum ParserError: Error {
         case invalidFormat
         case missedRequiredField
         case unsupportedVariationType
         case unsupportedLocalizationUnit
     }
-}
 
-private extension XCStringsParser {
-
-    typealias Raw = [String: Any]
-    typealias LanguageCode = LocalizableStrings.LanguageCode
-    typealias LocalizableString = LocalizableStrings.LocalizableString
-    typealias ExtractionState = LocalizableString.ExtractionState
-    typealias Localization = LocalizableString.Localization
-    typealias Variations = Localization.Variations
-    typealias Plural = Localization.Plural
-    typealias Device = Localization.Device
-    typealias Unit = Localization.Unit
-    typealias StringUnit = Localization.StringUnit
+    private typealias Raw = [String: Any]
+    private typealias LanguageCode = LocalizableStrings.LanguageCode
+    private typealias LocalizableString = LocalizableStrings.LocalizableString
+    private typealias ExtractionState = LocalizableString.ExtractionState
+    private typealias Localization = LocalizableString.Localization
+    private typealias Variations = Localization.Variations
+    private typealias Plural = Localization.Plural
+    private typealias Device = Localization.Device
+    private typealias Unit = Localization.Unit
+    private typealias StringUnit = Localization.StringUnit
 }
