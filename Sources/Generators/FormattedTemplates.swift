@@ -35,6 +35,6 @@ func formattedMark(name: String) -> String {
 
 func formattedValue(name: String, value: String) -> String {
 """
-\(intent)public let \(name) = \"\(value)\"
+\(intent)var \(name): String { \"\(value)\" }
 """
 }

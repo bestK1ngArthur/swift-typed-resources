@@ -28,6 +28,9 @@ public struct ImagesFileGenerator {
         var fileContent = formattedHeader(fileName: fileName, date: Date())
         fileContent += newLine
         fileContent += newLine
+        fileContent += "import SwiftTypedResources"
+        fileContent += newLine
+        fileContent += newLine
         fileContent += generateExtensionContent(for: resources, markMode: markMode)
 
         return fileContent

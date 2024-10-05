@@ -72,23 +72,25 @@ struct StringsFileGeneratorTests {
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
         //
 
+        import SwiftTypedResources
+        
         public extension TypedStrings {
 
-            public let base = "base"
-            public let base2 = "base2"
+            var base: String { "base" }
+            var base2: String { "base2" }
 
             // MARK: Flex
-            public let flexTwo = "Flex.Two"
+            var flexTwo: String { "Flex.Two" }
 
             // MARK: Test
-            public let testOne = "test-One"
-            public let testThree = "Test.Three"
-            public let testTwo = "_test_two"
+            var testOne: String { "test-One" }
+            var testThree: String { "Test.Three" }
+            var testTwo: String { "_test_two" }
         }
         
         public extension TypedStringsWithArguments {
 
-            public let pluralOne = "PluralOne"
+            var pluralOne: String { "PluralOne" }
         }
         """
         let real = generator.generateFileContent(
@@ -163,24 +165,26 @@ struct StringsFileGeneratorTests {
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
         //
 
+        import SwiftTypedResources
+        
         public extension TypedStrings {
 
             // MARK: First
-            public let firstDefaultOne = "DefaultOne"
-            public let firstDefaultTwo = "DefaultTwo"
+            var firstDefaultOne: String { "DefaultOne" }
+            var firstDefaultTwo: String { "DefaultTwo" }
 
             // MARK: Second
-            public let secondDefaultOne = "DefaultOne"
-            public let secondDefaultTwo = "DefaultTwo"
+            var secondDefaultOne: String { "DefaultOne" }
+            var secondDefaultTwo: String { "DefaultTwo" }
         }
         
         public extension TypedStringsWithArguments {
 
             // MARK: First
-            public let firstPluralOne = "PluralOne"
+            var firstPluralOne: String { "PluralOne" }
         
             // MARK: Second
-            public let secondPluralOne = "PluralOne"
+            var secondPluralOne: String { "PluralOne" }
         }
         """
         let real = generator.generateFileContent(

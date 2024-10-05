@@ -38,14 +38,16 @@ struct ImagesFileGeneratorTests {
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
         //
 
+        import SwiftTypedResources
+        
         public extension TypedImages {
 
-            public let base = "base"
-            public let base2 = "base2"
-            public let flexTwo = "Flex.Two"
-            public let testOne = "test-One"
-            public let testThree = "Test.Three"
-            public let testTwo = "_test_two"
+            var base: String { "base" }
+            var base2: String { "base2" }
+            var flexTwo: String { "Flex.Two" }
+            var testOne: String { "test-One" }
+            var testThree: String { "Test.Three" }
+            var testTwo: String { "_test_two" }
         }
         """
         let real = generator.generateFileContent(
@@ -90,17 +92,19 @@ struct ImagesFileGeneratorTests {
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
         //
 
+        import SwiftTypedResources
+        
         public extension TypedImages {
 
             // MARK: One
-            public let oneTestOne = "oneTest-One"
-            public let oneTestThree = "oneTest.Three"
-            public let oneTestTwo = "one_test_two"
+            var oneTestOne: String { "oneTest-One" }
+            var oneTestThree: String { "oneTest.Three" }
+            var oneTestTwo: String { "one_test_two" }
         
             // MARK: Two
-            public let twoTestOne = "twoTest-One"
-            public let twoTestThree = "twoTest.Three"
-            public let twoTestTwo = "two_test_two"
+            var twoTestOne: String { "twoTest-One" }
+            var twoTestThree: String { "twoTest.Three" }
+            var twoTestTwo: String { "two_test_two" }
         }
         """
         let real = generator.generateFileContent(
@@ -138,17 +142,19 @@ struct ImagesFileGeneratorTests {
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
         //
 
+        import SwiftTypedResources
+        
         public extension TypedImages {
 
             // MARK: One
-            public let oneTestOne = "test-One"
-            public let oneTestThree = "Test.Three"
-            public let oneTestTwo = "_test_two"
+            var oneTestOne: String { "test-One" }
+            var oneTestThree: String { "Test.Three" }
+            var oneTestTwo: String { "_test_two" }
 
             // MARK: Two
-            public let twoTestOne = "test-One"
-            public let twoTestThree = "Test.Three"
-            public let twoTestTwo = "_test_two"
+            var twoTestOne: String { "test-One" }
+            var twoTestThree: String { "Test.Three" }
+            var twoTestTwo: String { "_test_two" }
         }
         """
         let real = generator.generateFileContent(

@@ -108,7 +108,7 @@ let testsTargets: [Target] = [
 // MARK: - Package
 
 let package = Package(
-    name: "SwiftTypedResources",
+    name: "swift-typed-resources",
     platforms: [.iOS(.v15), .macOS(.v13)],
     products: executables + libraries + plugins,
     dependencies: dependencies,

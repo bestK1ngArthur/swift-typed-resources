@@ -27,6 +27,9 @@ public struct StringsFileGenerator {
 
         var fileContent = formattedHeader(fileName: fileName, date: Date())
         fileContent += newLine
+        fileContent += newLine
+        fileContent += "import SwiftTypedResources"
+        fileContent += newLine
         fileContent += generateMainContent(for: resources, markMode: markMode)
 
         return fileContent
