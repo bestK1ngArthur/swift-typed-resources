@@ -48,7 +48,7 @@ public struct StringsFileGenerator {
                     continue
                 }
 
-                if case .variated(.byPlural) = localization {
+                if localization.containesNestedValue {
                     stringsWithArgumentsKeys.append((key, resource.table))
                 } else {
                     stringsKeys.append((key, resource.table))
@@ -171,4 +171,43 @@ extension StringsFileGenerator {
     }
 
     private typealias GroupedValues = [String?: [(name: String, key: String)]]
+}
+
+private extension LocalizableStrings.LocalizableString.Localization {
+
+    var containesNestedValue: Bool {
+        switch self {
+            case let .default(unit):
+                unit.containsNestedValue
+
+            case let .variated(.byDevice(variations)):
+                variations.values.contains(where: \.containsNestedValue)
+
+            case let .variated(.byPlural(variations)):
+                variations.values.contains(where: \.containsNestedValue)
+        }
+    }
+}
+
+private extension LocalizableStrings.LocalizableString.Localization.Unit {
+
+    var containsNestedValue: Bool {
+        switch self {
+            case let .string(stringUnit):
+                stringUnit.containsNestedValue
+        }
+    }
+}
+
+private extension LocalizableStrings.LocalizableString.Localization.StringUnit {
+
+    private enum NestedValue: String, CaseIterable {
+        case string = "%@"
+        case double = "%d"
+        case int = "%i"
+    }
+
+    var containsNestedValue: Bool {
+        NestedValue.allCases.contains(where: { value.contains($0.rawValue) })
+    }
 }

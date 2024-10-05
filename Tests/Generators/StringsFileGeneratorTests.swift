@@ -41,7 +41,7 @@ struct StringsFileGeneratorTests {
                             .one: .string(
                                 .init(
                                     state: .translated,
-                                    value: ""
+                                    value: "test %@"
                                 )
                             )
                         ]
@@ -124,7 +124,7 @@ struct StringsFileGeneratorTests {
                             .one: .string(
                                 .init(
                                     state: .translated,
-                                    value: ""
+                                    value: "test %@"
                                 )
                             )
                         ]
