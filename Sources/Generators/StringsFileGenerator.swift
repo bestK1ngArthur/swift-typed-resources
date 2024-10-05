@@ -89,7 +89,7 @@ public struct StringsFileGenerator {
             case .byTable:
                 groupedValues = Dictionary(
                     grouping: keys,
-                    by: { $0.table.capitalized }
+                    by: { $0.table.firstCharacterUppercased() }
                 )
                 .mapValues { keys in
                     keys
@@ -101,7 +101,7 @@ public struct StringsFileGenerator {
                 let keys = keys.map(\.key)
                 groupedValues = Dictionary(
                     grouping: keys,
-                    by: { $0.group?.capitalized }
+                    by: { $0.group?.firstCharacterUppercased() }
                 )
                 .mapValues { keys in
                     keys

@@ -16,7 +16,7 @@ extension String {
             .filter { !$0.isEmpty }
             .enumerated()
             .map { index, element in
-                index == 0 ? element.firstCharacterLowercased() : element.capitalized
+                index == 0 ? element.firstCharacterLowercased() : element.firstCharacterUppercased()
             }
         return formattedComponents.joined()
     }

@@ -32,7 +32,7 @@ struct ImagesFileGeneratorTests {
         )
         let expected = """
         //
-        //  Images.generated.swift
+        //  TypedImages.swift
         //  swift-typed-resources
         //
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
@@ -48,7 +48,10 @@ struct ImagesFileGeneratorTests {
             public let testTwo = "_test_two"
         }
         """
-        let real = generator.generateFileContent(for: [resource])
+        let real = generator.generateFileContent(
+            for: [resource],
+            fileName: "TypedImages.swift"
+        )
         #expect(expected == real)
     }
 
@@ -81,7 +84,7 @@ struct ImagesFileGeneratorTests {
         )
         let expected = """
         //
-        //  Images.generated.swift
+        //  TypedImages.swift
         //  swift-typed-resources
         //
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
@@ -100,7 +103,10 @@ struct ImagesFileGeneratorTests {
             public let twoTestTwo = "two_test_two"
         }
         """
-        let real = generator.generateFileContent(for: [resource])
+        let real = generator.generateFileContent(
+            for: [resource],
+            fileName: "TypedImages.swift"
+        )
         #expect(expected == real)
     }
 
@@ -126,7 +132,7 @@ struct ImagesFileGeneratorTests {
         ]
         let expected = """
         //
-        //  Images.generated.swift
+        //  TypedImages.swift
         //  swift-typed-resources
         //
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
@@ -145,7 +151,10 @@ struct ImagesFileGeneratorTests {
             public let twoTestTwo = "_test_two"
         }
         """
-        let real = generator.generateFileContent(for: resources)
+        let real = generator.generateFileContent(
+            for: resources,
+            fileName: "TypedImages.swift"
+        )
         #expect(expected == real)
     }
 }

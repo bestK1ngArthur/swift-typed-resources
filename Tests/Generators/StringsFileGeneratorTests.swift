@@ -66,7 +66,7 @@ struct StringsFileGeneratorTests {
         )
         let expected = """
         //
-        //  Strings.generated.swift
+        //  TypedStrings.swift
         //  swift-typed-resources
         //
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
@@ -91,7 +91,10 @@ struct StringsFileGeneratorTests {
             public let pluralOne = "PluralOne"
         }
         """
-        let real = generator.generateFileContent(for: [resource])
+        let real = generator.generateFileContent(
+            for: [resource],
+            fileName: "TypedStrings.swift"
+        )
         #expect(expected == real)
     }
 
@@ -154,7 +157,7 @@ struct StringsFileGeneratorTests {
 
         let expected = """
         //
-        //  Strings.generated.swift
+        //  TypedStrings.swift
         //  swift-typed-resources
         //
         //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
@@ -180,7 +183,10 @@ struct StringsFileGeneratorTests {
             public let secondPluralOne = "PluralOne"
         }
         """
-        let real = generator.generateFileContent(for: resources)
+        let real = generator.generateFileContent(
+            for: resources,
+            fileName: "TypedStrings.swift"
+        )
         #expect(expected == real)
     }
 }

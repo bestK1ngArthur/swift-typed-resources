@@ -43,7 +43,7 @@ public struct ImagesFileGenerator {
             case .byTable:
                 groupedValues = Dictionary(
                     grouping: values,
-                    by: { $0.group?.capitalized }
+                    by: { $0.group?.firstCharacterUppercased() }
                 )
                 .mapValues { keys in
                     keys
@@ -62,7 +62,7 @@ public struct ImagesFileGenerator {
             case .byParentFolder:
                 groupedValues = Dictionary(
                     grouping: values,
-                    by: { $0.group?.capitalized }
+                    by: { $0.group?.firstCharacterUppercased() }
                 )
                 .mapValues { values in
                     values
