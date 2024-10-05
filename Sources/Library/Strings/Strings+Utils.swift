@@ -10,26 +10,23 @@ import SwiftUI
 
 public extension String {
 
-    // FIXME: Use file name from config
-    static let stringsFileName = "Strings"
-
     static func resource(_ typedString: TypedString) -> String {
-        let key = TypedStrings.shared[keyPath: typedString]
+        let config = TypedStrings.shared[keyPath: typedString]
         return NSLocalizedString(
-            key,
-            tableName: Self.stringsFileName,
-            bundle: .main,
+            config.key,
+            tableName: config.table,
+            bundle: config.bundle,
             comment: ""
         )
     }
 
     static func resource(_ typedString: TypedStringWithArguments, _ arguments: CVarArg...) -> String {
-        let key = TypedStringsWithArguments.shared[keyPath: typedString]
+        let config = TypedStringsWithArguments.shared[keyPath: typedString]
         return .localizedStringWithFormat(
             NSLocalizedString(
-                key,
-                tableName: Self.stringsFileName,
-                bundle: .main,
+                config.key,
+                tableName: config.table,
+                bundle: config.bundle,
                 comment: ""
             ),
             arguments

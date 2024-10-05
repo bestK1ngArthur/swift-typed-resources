@@ -96,25 +96,27 @@ public struct StringsFileGenerator {
                 )
                 .mapValues { keys in
                     keys
-                        .map { (name: "\($0.table.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())", key: $0.key) }
+                        .map {
+                            let name = "\($0.table.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())"
+                            return (name: name, key: $0.key, table: $0.table)
+                        }
                         .sorted { $0.name < $1.name }
                 }
 
             case .byKeyDelimeter:
-                let keys = keys.map(\.key)
                 groupedValues = Dictionary(
                     grouping: keys,
-                    by: { $0.group?.firstCharacterUppercased() }
+                    by: { $0.key.group?.firstCharacterUppercased() }
                 )
                 .mapValues { keys in
                     keys
-                        .map { (name: $0.varName, key: $0) }
+                        .map { (name: $0.key.varName, key: $0.key, table: $0.table) }
                         .sorted { $0.name < $1.name }
                 }
 
             default:
                 let keys = keys
-                    .map { (name: $0.key.varName, key: $0.key) }
+                    .map { (name: $0.key.varName, key: $0.key, table: $0.table) }
                     .sorted { $0.name < $1.name }
                 groupedValues = [nil: keys]
         }
@@ -134,7 +136,7 @@ public struct StringsFileGenerator {
         if let valuesWithoutGroups = groupedValues[nil], !valuesWithoutGroups.isEmpty {
             for value in valuesWithoutGroups {
                 content += newLine
-                content += formattedValue(name: value.name, value: value.key)
+                content += generateValue(value)
             }
 
             if !groupNames.isEmpty {
@@ -149,7 +151,7 @@ public struct StringsFileGenerator {
 
                 for value in groupValues {
                     content += newLine
-                    content += formattedValue(name: value.name, value: value.key)
+                    content += generateValue(value)
                 }
 
                 if index < groupNames.count - 1 {
@@ -159,6 +161,14 @@ public struct StringsFileGenerator {
         }
 
         return content
+    }
+
+    private func generateValue(_ value: GroupedValue) -> FileContent {
+        formattedValue(
+            name: value.name,
+            type: "TypedStringConfig",
+            value: "(key: \"\(value.key)\", table: \"\(value.table)\", bundle: .module)"
+        )
     }
 }
 
@@ -170,7 +180,8 @@ extension StringsFileGenerator {
         case automatic
     }
 
-    private typealias GroupedValues = [String?: [(name: String, key: String)]]
+    private typealias GroupedValue = (name: String, key: String, table: String)
+    private typealias GroupedValues = [String?: [GroupedValue]]
 }
 
 private extension LocalizableStrings.LocalizableString.Localization {

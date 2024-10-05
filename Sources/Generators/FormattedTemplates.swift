@@ -33,8 +33,8 @@ func formattedMark(name: String) -> String {
 """
 }
 
-func formattedValue(name: String, value: String) -> String {
+func formattedValue(name: String, type: String, value: String) -> String {
 """
-\(intent)var \(name): String { \"\(value)\" }
+\(intent)var \(name): \(type) { \(value) }
 """
 }

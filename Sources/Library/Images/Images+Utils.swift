@@ -12,10 +12,9 @@ import UIKit
 public extension UIImage {
 
     static func resource(_ typedImage: TypedImage) -> UIImage {
-        let imageName = TypedImages.shared[keyPath: typedImage]
-
-        guard let image = UIImage(named: imageName, in: .main, with: nil) else {
-            fatalError("Can't find image in assets")
+        let imageConfig = TypedImages.shared[keyPath: typedImage]
+        guard let image = UIImage(named: imageConfig.name, in: imageConfig.bundle, with: nil) else {
+            fatalError("Can't find image \"(\(imageConfig.name))\" in assets")
         }
 
         return image
@@ -25,19 +24,19 @@ public extension UIImage {
 public extension Image {
 
     init(_ typedImage: TypedImage) {
-        let imageName = TypedImages.shared[keyPath: typedImage]
-        self.init(imageName, bundle: .main)
+        let imageConfig = TypedImages.shared[keyPath: typedImage]
+        self.init(imageConfig.name, bundle: imageConfig.bundle)
     }
 }
 
 public extension URL {
 
     static func resource(_ typedImage: TypedImage) -> URL {
-        let imageName = TypedImages.shared[keyPath: typedImage]
-        if let url = Bundle.main.url(forResource: imageName, withExtension: nil) {
-            return url
-        } else {
+        let imageConfig = TypedImages.shared[keyPath: typedImage]
+        guard let url = imageConfig.bundle.url(forResource: imageConfig.name, withExtension: nil) else {
             return Bundle.main.bundleURL
         }
+
+        return url
     }
 }

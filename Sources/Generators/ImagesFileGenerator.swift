@@ -96,7 +96,8 @@ public struct ImagesFileGenerator {
         if let valuesWithoutGroups = groupedValues[nil], !valuesWithoutGroups.isEmpty {
             for value in valuesWithoutGroups {
                 content += newLine
-                content += formattedValue(name: value.name, value: value.value)
+                content += generateValue(value)
+
             }
 
             if !groupNames.isEmpty {
@@ -111,7 +112,7 @@ public struct ImagesFileGenerator {
 
                 for value in groupValues {
                     content += newLine
-                    content += formattedValue(name: value.name, value: value.value)
+                    content += generateValue(value)
                 }
 
                 if index < groupNames.count - 1 {
@@ -166,6 +167,14 @@ public struct ImagesFileGenerator {
         }
         return values
     }
+
+    private func generateValue(_ value: GroupedValue) -> FileContent {
+        formattedValue(
+            name: value.name,
+            type: "TypedImageConfig",
+            value: "(name: \"\(value.value)\", bundle: .module)"
+        )
+    }
 }
 
 extension ImagesFileGenerator {
@@ -177,5 +186,6 @@ extension ImagesFileGenerator {
     }
 
     private typealias Values = [(group: String?, value: String)]
-    private typealias GroupedValues = [String?: [(name: String, value: String)]]
+    private typealias GroupedValue = (name: String, value: String)
+    private typealias GroupedValues = [String?: [GroupedValue]]
 }

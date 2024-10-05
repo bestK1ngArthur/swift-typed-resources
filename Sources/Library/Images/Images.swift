@@ -6,8 +6,11 @@
 //  Copyright © 2024 Artem Belkov. All rights reserved.
 //
 
+import Foundation
+
 public struct TypedImages {
     static let shared = Self()
 }
 
-public typealias TypedImage = KeyPath<TypedImages, String>
+public typealias TypedImage = KeyPath<TypedImages, TypedImageConfig>
+public typealias TypedImageConfig = (name: String, bundle: Bundle)
