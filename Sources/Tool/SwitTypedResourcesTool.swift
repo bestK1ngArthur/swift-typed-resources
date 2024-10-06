@@ -6,11 +6,11 @@
 //  Copyright © 2024 Artem Belkov. All rights reserved.
 //
 
-import Foundation
 import ArgumentParser
-import SwiftTypedResourcesParsers
-import SwiftTypedResourcesModels
+import Foundation
 import SwiftTypedResourcesGenerators
+import SwiftTypedResourcesModels
+import SwiftTypedResourcesParsers
 
 @main
 struct SwiftTypedResourcesTool: ParsableCommand {

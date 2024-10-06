@@ -52,5 +52,5 @@ let intent = String(repeating: " ", count: 4)
 let delimiters = CharacterSet(charactersIn: ".-_")
 
 func intents(count: Int) -> String {
-    return .init(repeating: intent, count: count)
+    .init(repeating: intent, count: count)
 }

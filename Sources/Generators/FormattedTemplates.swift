@@ -19,6 +19,12 @@ func formattedHeader(fileName: String, date: Date) -> String {
 """
 }
 
+func formattedImports(library: String = "SwiftTypedResources") -> String {
+"""
+import \(library)
+"""
+}
+
 func formattedExtension(name: String, content: String) -> String {
 """
 public extension \(name) {

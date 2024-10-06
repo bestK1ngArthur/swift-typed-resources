@@ -24,7 +24,7 @@ let libraries: [Product] = [
     .library(
         name: "SwiftTypedResourcesGenerators",
         targets: ["SwiftTypedResourcesGenerators"]
-    ),
+    )
 ]
 
 let executables: [Product] = [
@@ -104,13 +104,12 @@ let testsTargets: [Target] = [
     )
 ]
 
-
 // MARK: - Package
 
 let package = Package(
     name: "swift-typed-resources",
     platforms: [.iOS(.v15), .macOS(.v13)],
-    products: executables + libraries + plugins,
+    products: libraries + executables + plugins,
     dependencies: dependencies,
     targets: libraryTargets + executableTargers + pluginsTargets + testsTargets
 )
