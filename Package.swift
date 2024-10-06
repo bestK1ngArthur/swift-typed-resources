@@ -36,8 +36,8 @@ let executables: [Product] = [
 
 let plugins: [Product] = [
     .plugin(
-        name: "GenerateResourcesCommand",
-        targets: ["GenerateResourcesCommand"]
+        name: "GenerateResources",
+        targets: ["GenerateResources"]
     )
 ]
 
@@ -78,7 +78,7 @@ let executableTargers: [Target] = [
 
 let pluginsTargets: [Target] = [
     .plugin(
-        name: "GenerateResourcesCommand",
+        name: "GenerateResources",
         capability: .command(
             intent: .custom(
                 verb: "generate-resources",
@@ -87,7 +87,7 @@ let pluginsTargets: [Target] = [
             permissions: [.writeToPackageDirectory(reason: "Write generated files")]
         ),
         dependencies: ["SwiftTypedResourcesTool"],
-        path: "Sources/Plugins/GenerateResourcesCommand"
+        path: "Sources/Plugins/GenerateResources"
     )
 ]
 
