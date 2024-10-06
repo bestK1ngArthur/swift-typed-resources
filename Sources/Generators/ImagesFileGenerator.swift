@@ -32,6 +32,7 @@ public struct ImagesFileGenerator {
         fileContent += newLine
         fileContent += newLine
         fileContent += generateExtensionContent(for: resources, markMode: markMode)
+        fileContent += newLine
 
         return fileContent
     }

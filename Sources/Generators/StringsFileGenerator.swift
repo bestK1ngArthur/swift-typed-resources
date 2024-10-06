@@ -31,6 +31,7 @@ public struct StringsFileGenerator {
         fileContent += formattedImports()
         fileContent += newLine
         fileContent += generateMainContent(for: resources, markMode: markMode)
+        fileContent += newLine
 
         return fileContent
     }
