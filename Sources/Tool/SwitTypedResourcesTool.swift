@@ -50,6 +50,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
     // MARK: Private
 
     private static let fileManager: FileManager = .default
+    private static let encoding: String.Encoding = .utf8
 
     private static func generateStrings(from inputPath: URL, to outputPath: URL) throws {
         let fileURLs = findFiles(withExtension: "xcstrings", at: inputPath)
@@ -63,7 +64,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         let resources: StringsResources = fileURLs.compactMap { fileURL in
             guard
                 let data = try? Data(contentsOf: fileURL),
-                let strings = try? parser.parse(data)
+                let strings = try? parser.parse(data, encoding: encoding)
             else {
                 return nil
             }
@@ -81,7 +82,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         try fileContent.write(
             to: fileURL,
             atomically: true,
-            encoding: .utf8
+            encoding: encoding
         )
     }
 
@@ -105,7 +106,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         try fileContent.write(
             to: fileURL,
             atomically: true,
-            encoding: .utf8
+            encoding: encoding
         )
     }
 

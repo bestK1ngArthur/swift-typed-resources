@@ -13,7 +13,12 @@ public struct XCStringsParser {
 
     public init() {}
 
-    public func parse(_ data: Data) throws -> LocalizableStrings {
+    public func parse(
+        _ data: Data,
+        encoding: String.Encoding = .utf8
+    ) throws -> LocalizableStrings {
+        let data = try escapeValuesSpecialCharacters(in: data, encoding: encoding)
+
         guard let raw = try JSONSerialization.jsonObject(with: data) as? Raw else {
             throw ParserError.invalidFormat
         }
@@ -147,6 +152,81 @@ public struct XCStringsParser {
             state: state,
             value: value
         )
+    }
+
+    // MARK: Special symbols
+
+    private enum SpecialSymbol: String, CaseIterable {
+        case doubleQuote = "\""
+        case newLine = "\n"
+        case carriageReturn = "\r"
+        case tab = "\t"
+
+        var escaped: String {
+            rawValue.unicodeScalars
+                .map { $0.escaped(asASCII: false) }
+                .joined()
+        }
+    }
+
+    /// `.xcstrings` use unescaped special symbols (like '\n') in values unlike json. So it's needed to escape manually to parse as json
+    private func escapeValuesSpecialCharacters(in data: Data, encoding: String.Encoding) throws -> Data {
+        guard let string = String(data: data, encoding: .utf8) else {
+            return data
+        }
+
+        let valuesPattern = "\"value\"\\s*:\\s*\"([^\"]*)\""
+        let valuesRegex = try NSRegularExpression(pattern: valuesPattern, options: [])
+
+        let valuePattern = ": \"([^\"]*)\""
+        let valueRegex = try NSRegularExpression(pattern: valuePattern, options: [])
+
+        func escapeSpecialCharacters(in value: String) -> String {
+            var escapedValue = value
+            let matches = valueRegex.matches(
+                in: value,
+                options: [],
+                range: NSRange(location: 0, length: value.count)
+            )
+
+            for match in matches.reversed() where match.numberOfRanges > 1 {
+                let matchRange = match.range(at: 1)
+                if let range = Range(matchRange, in: value) {
+                    var replacement = String(value[range])
+                    for specialSymbol in SpecialSymbol.allCases {
+                        replacement = replacement.replacingOccurrences(
+                            of: specialSymbol.rawValue,
+                            with: specialSymbol.escaped
+                        )
+                    }
+                    escapedValue.replaceSubrange(range, with: replacement)
+                }
+            }
+
+            return escapedValue
+        }
+
+        var escapedString = string
+        let matches = valuesRegex.matches(
+            in: string,
+            options: [],
+            range: NSRange(location: 0, length: string.count)
+        )
+
+        for match in matches.reversed() {
+            let matchRange = match.range
+            if let range = Range(matchRange, in: string) {
+                let foundString = String(string[range])
+                let replacement = escapeSpecialCharacters(in: foundString)
+                escapedString.replaceSubrange(range, with: replacement)
+            }
+        }
+
+        guard let escapedData = escapedString.data(using: encoding) else {
+            return data
+        }
+
+        return escapedData
     }
 }
 

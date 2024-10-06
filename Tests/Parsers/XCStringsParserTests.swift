@@ -27,7 +27,7 @@ struct XCStringsParserTests {
                         "en" : {
                             "stringUnit" : {
                                 "state" : "translated",
-                                "value" : "Test String"
+                                "value" : "Test \nString"
                             }
                         }
                     }
@@ -43,7 +43,7 @@ struct XCStringsParserTests {
                     .string(
                         .init(
                             state: .translated,
-                            value: "Test String"
+                            value: "Test \nString"
                         )
                     )
                 )]
