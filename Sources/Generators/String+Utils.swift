@@ -49,7 +49,7 @@ extension String {
 
 let newLine = "\n"
 let intent = String(repeating: " ", count: 4)
-let delimiters = CharacterSet(charactersIn: ".-_")
+let delimiters = CharacterSet(charactersIn: ".-_ ")
 
 func intents(count: Int) -> String {
     .init(repeating: intent, count: count)

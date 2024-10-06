@@ -85,6 +85,7 @@ extension LocalizableStrings.LocalizableString.Localization {
         case many
         case one
         case other
+        case two
         case zero
     }
 
