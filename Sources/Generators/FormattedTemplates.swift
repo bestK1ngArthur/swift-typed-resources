@@ -12,9 +12,7 @@ func formattedHeader(fileName: String, date: Date) -> String {
 """
 //
 //  \(fileName)
-//  swift-typed-resources
-//
-//  Generated on \(date.formatted(date: .numeric, time: .omitted)).
+//  This file was automatically generated and should not be edited.
 //
 """
 }
