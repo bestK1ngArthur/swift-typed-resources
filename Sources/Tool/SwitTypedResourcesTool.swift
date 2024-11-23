@@ -24,12 +24,15 @@ struct SwiftTypedResourcesTool: ParsableCommand {
     public var resources: Set<Resource> = [.images, .strings]
 
     @Argument(help: "Specify the resources path")
-    public var path: String
+    public var resourcesPath: String
+
+    @Argument(help: "Specify the sources path")
+    public var sourcesPath: String
 
     public func run() throws {
-        let inputPath = URL(fileURLWithPath: path)
+        let inputPath = URL(fileURLWithPath: resourcesPath)
+        let outputPath = URL(fileURLWithPath: sourcesPath).appendingPathComponent("Generated")
 
-        let outputPath = inputPath.appendingPathComponent("Generated")
         if !outputPath.hasDirectoryPath {
             print("Folder created")
             try Self.fileManager.createDirectory(
