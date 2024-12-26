@@ -9,6 +9,9 @@ xcuserdata/
 *.xcuserdatad/
 DerivedData/
 
+# VSCode
+.vscode/
+
 # Build artifacts
 *.o
 *.dSYM

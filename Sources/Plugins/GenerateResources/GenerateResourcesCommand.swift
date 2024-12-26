@@ -19,8 +19,10 @@ struct GenerateResourcesCommand: CommandPlugin {
         for target in context.package.targets {
             guard let target = target as? SourceModuleTarget else { continue }
 
+            let path = target.directory.string
             let arguments: [String] = [
-                target.directory.string,
+                path,
+                path,
                 "--resources", "images+strings"
             ]
 
