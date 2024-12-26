@@ -41,12 +41,12 @@ let package = Package(
 
 ## Generate
 
-1. Right-click to **MyPackage** to show Xcode context menu.
+1. Right-click on **MyPackage** to show Xcode context menu.
 2. Then select **GenerateResources** in **swift-typed-resources** section to generate swift files.
 
 <img width="311" alt="Screenshot 2024-12-26 at 13 12 09" src="https://github.com/user-attachments/assets/9ae5b1fc-2337-44e1-89a3-ee2277b99866" />
 
-### Generated File Examples
+### Generated Files Example
 
 #### Generated/TypedStrings.swift
 
