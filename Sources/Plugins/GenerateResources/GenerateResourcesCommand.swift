@@ -30,12 +30,45 @@ struct GenerateResourcesCommand: CommandPlugin {
             process.waitUntilExit()
 
             if process.terminationReason == .exit && process.terminationStatus == 0 {
-                print("Resources have been generated.")
-            }
-            else {
+                Diagnostics.progress("Resources have been generated.")
+            } else {
                 let problem = "\(process.terminationReason):\(process.terminationStatus)"
                 Diagnostics.error("Resources generation has been failed: \(problem)")
             }
         }
     }
 }
+
+#if canImport(XcodeProjectPlugin)
+import XcodeProjectPlugin
+
+extension GenerateResourcesCommand: XcodeCommandPlugin {
+
+    func performCommand(context: XcodePluginContext, arguments: [String]) throws {
+        let tool = try context.tool(named: "SwiftTypedResourcesTool")
+        let toolExecutable = URL(fileURLWithPath: tool.path.string)
+
+        let projectDirectory = context.xcodeProject.directory
+
+        for target in context.xcodeProject.targets {
+            let path = projectDirectory.appending([target.displayName]).string
+            let arguments: [String] = [
+                path,
+                path,
+                "--resources", "images+strings"
+            ]
+
+            let process = try Process.run(toolExecutable, arguments: arguments)
+            process.waitUntilExit()
+
+            if process.terminationReason == .exit && process.terminationStatus == 0 {
+                Diagnostics.progress("Resources have been generated.")
+            } else {
+                let problem = "\(process.terminationReason):\(process.terminationStatus)"
+                Diagnostics.error("Resources generation has been failed: \(problem)")
+            }
+        }
+    }
+}
+
+#endif
