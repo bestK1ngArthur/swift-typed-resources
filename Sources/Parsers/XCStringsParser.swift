@@ -52,14 +52,14 @@ public struct XCStringsParser {
     }
 
     private func parseString(from raw: Raw) throws -> LocalizableString {
-        guard
-            let rawExtractionState = raw["extractionState"] as? String,
-            let rawLocalizations = raw["localizations"] as? Raw
-        else {
+        guard let rawLocalizations = raw["localizations"] as? Raw else {
             throw ParserError.missedRequiredField
         }
 
-        let extractionState = ExtractionState(rawValue: rawExtractionState) ?? .unsupported
+        let rawExtractionState = raw["extractionState"] as? String
+        let extractionState = rawExtractionState.flatMap {
+            ExtractionState(rawValue: $0) ?? .unsupported
+        }
 
         return .init(
             extractionState: extractionState,

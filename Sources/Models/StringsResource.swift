@@ -30,10 +30,13 @@ public struct LocalizableStrings: Equatable {
     }
 
     public struct LocalizableString: Equatable {
-        public let extractionState: ExtractionState
+        public let extractionState: ExtractionState?
         public let localizations: [LanguageCode: Localization]
 
-        public init(extractionState: ExtractionState, localizations: [LanguageCode: Localization]) {
+        public init(
+            extractionState: ExtractionState?,
+            localizations: [LanguageCode: Localization]
+        ) {
             self.extractionState = extractionState
             self.localizations = localizations
         }
@@ -42,7 +45,10 @@ public struct LocalizableStrings: Equatable {
     public let sourceLanguage: LanguageCode
     public let strings: [String: LocalizableString]
 
-    public init(sourceLanguage: LanguageCode, strings: [String: LocalizableString]) {
+    public init(
+        sourceLanguage: LanguageCode,
+        strings: [String: LocalizableString]
+    ) {
         self.sourceLanguage = sourceLanguage
         self.strings = strings
     }
