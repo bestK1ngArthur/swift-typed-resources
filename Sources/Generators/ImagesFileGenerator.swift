@@ -58,7 +58,7 @@ public struct ImagesFileGenerator {
                             } else {
                                 varName
                             }
-                            return (name: name, value: $0.value)
+                            return (name: name, value: $0.value, bundle: $0.bundle)
                         }
                         .sorted { $0.name < $1.name }
                 }
@@ -70,13 +70,13 @@ public struct ImagesFileGenerator {
                 )
                 .mapValues { values in
                     values
-                        .map { (name: $0.value.varName, value: $0.value) }
+                        .map { (name: $0.value.varName, value: $0.value, bundle: $0.bundle) }
                         .sorted { $0.name < $1.name }
                 }
 
             default:
                 let values = values
-                    .map { (name: $0.value.varName, value: $0.value) }
+                    .map { (name: $0.value.varName, value: $0.value, bundle: $0.bundle) }
                     .sorted { $0.name < $1.name }
                 groupedValues = [nil: values]
         }
@@ -147,23 +147,23 @@ public struct ImagesFileGenerator {
 
                 switch asset {
                     case .folder(let folder):
-                        values += getValues(from: folder, group: group)
+                        values += getValues(from: folder, group: group, bundle: resource.bundle)
                     case .imageAsset(let imageAsset):
-                        values.append((group: group, value: imageAsset.fileName))
+                        values.append((group: group, value: imageAsset.fileName, bundle: resource.bundle))
                 }
             }
         }
         return values
     }
 
-    private func getValues(from folder: ImagesResource.Folder, group: String?) -> Values {
+    private func getValues(from folder: ImagesResource.Folder, group: String?, bundle: ResourceBundle) -> Values {
         var values: Values = []
         for (_, asset) in folder.assets {
             switch asset {
                 case .folder(let folder):
-                    values += getValues(from: folder, group: group)
+                    values += getValues(from: folder, group: group, bundle: bundle)
                 case .imageAsset(let imageAsset):
-                    values.append((group: group, value: imageAsset.fileName))
+                    values.append((group: group, value: imageAsset.fileName, bundle: bundle))
             }
         }
         return values
@@ -173,7 +173,7 @@ public struct ImagesFileGenerator {
         formattedValue(
             name: value.name,
             type: "TypedImageConfig",
-            value: "(name: \"\(value.value)\", bundle: .module)"
+            value: "(name: \"\(value.value)\", bundle: .\(value.bundle.rawValue))"
         )
     }
 }
@@ -186,7 +186,7 @@ extension ImagesFileGenerator {
         case automatic
     }
 
-    private typealias Values = [(group: String?, value: String)]
-    private typealias GroupedValue = (name: String, value: String)
+    private typealias Values = [(group: String?, value: String, bundle: ResourceBundle)]
+    private typealias GroupedValue = (name: String, value: String, bundle: ResourceBundle)
     private typealias GroupedValues = [String?: [GroupedValue]]
 }

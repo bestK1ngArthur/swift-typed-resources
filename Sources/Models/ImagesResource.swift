@@ -35,9 +35,15 @@ public struct ImagesResource: Equatable {
 
     public let table: String
     public let assets: [String: Asset]
+    public let bundle: ResourceBundle
 
-    public init(table: String, assets: [String: Asset]) {
+    public init(
+        table: String,
+        assets: [String: Asset],
+        bundle: ResourceBundle
+    ) {
         self.table = table
         self.assets = assets
+        self.bundle = bundle
     }
 }

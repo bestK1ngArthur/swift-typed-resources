@@ -62,14 +62,13 @@ struct StringsFileGeneratorTests {
                     "base": string,
                     "PluralOne": pluralString
                 ]
-            )
+            ),
+            bundle: .module
         )
         let expected = """
         //
         //  TypedStrings.swift
-        //  swift-typed-resources
-        //
-        //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
+        //  This file was automatically generated and should not be edited.
         //
 
         import SwiftTypedResources
@@ -91,7 +90,7 @@ struct StringsFileGeneratorTests {
         public extension TypedStringsWithArguments {
 
             var pluralOne: TypedStringConfig { (key: "PluralOne", table: "Strings", bundle: .module) }
-        }
+        }\n
         """
         let real = generator.generateFileContent(
             for: [resource],
@@ -142,7 +141,8 @@ struct StringsFileGeneratorTests {
                         "DefaultTwo": string,
                         "PluralOne": pluralString
                     ]
-                )
+                ),
+                bundle: .module
             ),
             .init(
                 table: "Second",
@@ -153,16 +153,15 @@ struct StringsFileGeneratorTests {
                         "DefaultTwo": string,
                         "PluralOne": pluralString
                     ]
-                )
+                ),
+                bundle: .module
             )
         ]
 
         let expected = """
         //
         //  TypedStrings.swift
-        //  swift-typed-resources
-        //
-        //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
+        //  This file was automatically generated and should not be edited.
         //
 
         import SwiftTypedResources
@@ -185,7 +184,7 @@ struct StringsFileGeneratorTests {
         
             // MARK: Second
             var secondPluralOne: TypedStringConfig { (key: "PluralOne", table: "Second", bundle: .module) }
-        }
+        }\n
         """
         let real = generator.generateFileContent(
             for: resources,

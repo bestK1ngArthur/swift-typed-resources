@@ -12,10 +12,16 @@ public struct StringsResource: Equatable {
 
     public let table: String
     public let strings: LocalizableStrings
+    public let bundle: ResourceBundle
 
-    public init(table: String, strings: LocalizableStrings) {
+    public init(
+        table: String,
+        strings: LocalizableStrings,
+        bundle: ResourceBundle
+    ) {
         self.table = table
         self.strings = strings
+        self.bundle = bundle
     }
 }
 

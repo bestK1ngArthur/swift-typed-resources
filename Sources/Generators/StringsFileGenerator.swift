@@ -40,8 +40,8 @@ public struct StringsFileGenerator {
         for resources: StringsResources,
         markMode: MarkMode?
     ) -> FileContent {
-        var stringsKeys: [(key: String, table: String)] = []
-        var stringsWithArgumentsKeys: [(key: String, table: String)] = []
+        var stringsKeys: [(key: String, table: String, bundle: ResourceBundle)] = []
+        var stringsWithArgumentsKeys: [(key: String, table: String, bundle: ResourceBundle)] = []
 
         for resource in resources {
             for (key, string) in resource.strings.strings {
@@ -50,9 +50,9 @@ public struct StringsFileGenerator {
                 }
 
                 if localization.containesNestedValue {
-                    stringsWithArgumentsKeys.append((key, resource.table))
+                    stringsWithArgumentsKeys.append((key, resource.table, resource.bundle))
                 } else {
-                    stringsKeys.append((key, resource.table))
+                    stringsKeys.append((key, resource.table, resource.bundle))
                 }
             }
         }
@@ -84,7 +84,7 @@ public struct StringsFileGenerator {
     }
 
     private func generateExtensionContent(
-        for keys: [(key: String, table: String)],
+        for keys: [(key: String, table: String, bundle: ResourceBundle)],
         extensionName: String,
         markMode: MarkMode?
     ) -> FileContent {
@@ -99,7 +99,7 @@ public struct StringsFileGenerator {
                     keys
                         .map {
                             let name = "\($0.table.firstCharacterLowercased())\($0.key.varName.firstCharacterUppercased())"
-                            return (name: name, key: $0.key, table: $0.table)
+                            return (name: name, key: $0.key, table: $0.table, bundle: $0.bundle)
                         }
                         .sorted { $0.name < $1.name }
                 }
@@ -111,13 +111,13 @@ public struct StringsFileGenerator {
                 )
                 .mapValues { keys in
                     keys
-                        .map { (name: $0.key.varName, key: $0.key, table: $0.table) }
+                        .map { (name: $0.key.varName, key: $0.key, table: $0.table, bundle: $0.bundle) }
                         .sorted { $0.name < $1.name }
                 }
 
             default:
                 let keys = keys
-                    .map { (name: $0.key.varName, key: $0.key, table: $0.table) }
+                    .map { (name: $0.key.varName, key: $0.key, table: $0.table, bundle: $0.bundle) }
                     .sorted { $0.name < $1.name }
                 groupedValues = [nil: keys]
         }
@@ -168,7 +168,7 @@ public struct StringsFileGenerator {
         formattedValue(
             name: value.name,
             type: "TypedStringConfig",
-            value: "(key: \"\(value.key)\", table: \"\(value.table)\", bundle: .module)"
+            value: "(key: \"\(value.key)\", table: \"\(value.table)\", bundle: .\(value.bundle.rawValue))"
         )
     }
 }
@@ -181,7 +181,7 @@ extension StringsFileGenerator {
         case automatic
     }
 
-    private typealias GroupedValue = (name: String, key: String, table: String)
+    private typealias GroupedValue = (name: String, key: String, table: String, bundle: ResourceBundle)
     private typealias GroupedValues = [String?: [GroupedValue]]
 }
 

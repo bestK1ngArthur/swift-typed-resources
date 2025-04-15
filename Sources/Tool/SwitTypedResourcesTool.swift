@@ -20,14 +20,17 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         case strings
     }
 
-    @Option(help: "Specify the resources to generate", transform: Self.parseResources(_:))
-    public var resources: Set<Resource> = [.images, .strings]
-
     @Argument(help: "Specify the resources path")
     public var resourcesPath: String
 
     @Argument(help: "Specify the sources path")
     public var sourcesPath: String
+
+    @Option(help: "Specify the resources to generate", transform: Self.parseResources(_:))
+    public var resources: Set<Resource> = [.images, .strings]
+
+    @Option(help: "Specify the bundle")
+    public var bundle: String = "main"
 
     public func run() throws {
         let inputPath = URL(fileURLWithPath: resourcesPath)
@@ -41,12 +44,17 @@ struct SwiftTypedResourcesTool: ParsableCommand {
             )
         }
 
+        guard let bundle = ResourceBundle(rawValue: bundle) else {
+            print("Invalid bundle name")
+            return
+        }
+
         if resources.contains(.strings) {
-            try Self.generateStrings(from: inputPath, to: outputPath)
+            try Self.generateStrings(from: inputPath, to: outputPath, bundle: bundle)
         }
 
         if resources.contains(.images) {
-            try Self.generateImages(from: inputPath, to: outputPath)
+            try Self.generateImages(from: inputPath, to: outputPath, bundle: bundle)
         }
     }
 
@@ -55,7 +63,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
     private static let fileManager: FileManager = .default
     private static let encoding: String.Encoding = .utf8
 
-    private static func generateStrings(from inputPath: URL, to outputPath: URL) throws {
+    private static func generateStrings(from inputPath: URL, to outputPath: URL, bundle: ResourceBundle) throws {
         let fileURLs = findFiles(withExtension: "xcstrings", at: inputPath)
 
         guard !fileURLs.isEmpty else {
@@ -74,7 +82,8 @@ struct SwiftTypedResourcesTool: ParsableCommand {
 
             return .init(
                 table: fileURL.deletingPathExtension().lastPathComponent,
-                strings: strings
+                strings: strings,
+                bundle: bundle
             )
         }
 
@@ -89,7 +98,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
         )
     }
 
-    private static func generateImages(from inputPath: URL, to outputPath: URL) throws {
+    private static func generateImages(from inputPath: URL, to outputPath: URL, bundle: ResourceBundle) throws {
         let fileURLs = findFiles(withExtension: "xcassets", at: inputPath)
 
         guard !fileURLs.isEmpty else {
@@ -99,7 +108,7 @@ struct SwiftTypedResourcesTool: ParsableCommand {
 
         let parser = XCAssetsParser(fileManager: fileManager)
         let resources: ImagesResources = fileURLs.compactMap { fileURL in
-            try? parser.parse(at: fileURL)
+            try? parser.parse(at: fileURL, bundle: bundle)
         }
 
         let generator = ImagesFileGenerator()

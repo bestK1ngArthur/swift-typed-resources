@@ -28,14 +28,13 @@ struct ImagesFileGeneratorTests {
                 "Flex.Two": .imageAsset(.init(fileName: "Flex.Two")),
                 "base2": .imageAsset(.init(fileName: "base2")),
                 "base": .imageAsset(.init(fileName: "base"))
-            ]
+            ],
+            bundle: .module
         )
         let expected = """
         //
         //  TypedImages.swift
-        //  swift-typed-resources
-        //
-        //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
+        //  This file was automatically generated and should not be edited.
         //
 
         import SwiftTypedResources
@@ -48,7 +47,7 @@ struct ImagesFileGeneratorTests {
             var testOne: TypedImageConfig { (name: "test-One", bundle: .module) }
             var testThree: TypedImageConfig { (name: "Test.Three", bundle: .module) }
             var testTwo: TypedImageConfig { (name: "_test_two", bundle: .module) }
-        }
+        }\n
         """
         let real = generator.generateFileContent(
             for: [resource],
@@ -82,14 +81,13 @@ struct ImagesFileGeneratorTests {
                         ]
                     )
                 )
-            ]
+            ],
+            bundle: .module
         )
         let expected = """
         //
         //  TypedImages.swift
-        //  swift-typed-resources
-        //
-        //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
+        //  This file was automatically generated and should not be edited.
         //
 
         import SwiftTypedResources
@@ -105,7 +103,7 @@ struct ImagesFileGeneratorTests {
             var twoTestOne: TypedImageConfig { (name: "twoTest-One", bundle: .module) }
             var twoTestThree: TypedImageConfig { (name: "twoTest.Three", bundle: .module) }
             var twoTestTwo: TypedImageConfig { (name: "two_test_two", bundle: .module) }
-        }
+        }\n
         """
         let real = generator.generateFileContent(
             for: [resource],
@@ -123,7 +121,8 @@ struct ImagesFileGeneratorTests {
                     "test-One": .imageAsset(.init(fileName: "test-One")),
                     "_test_two": .imageAsset(.init(fileName: "_test_two")),
                     "Test.Three": .imageAsset(.init(fileName: "Test.Three"))
-                ]
+                ],
+                bundle: .module
             ),
             .init(
                 table: "Two",
@@ -131,15 +130,14 @@ struct ImagesFileGeneratorTests {
                     "test-One": .imageAsset(.init(fileName: "test-One")),
                     "_test_two": .imageAsset(.init(fileName: "_test_two")),
                     "Test.Three": .imageAsset(.init(fileName: "Test.Three"))
-                ]
+                ],
+                bundle: .module
             )
         ]
         let expected = """
         //
         //  TypedImages.swift
-        //  swift-typed-resources
-        //
-        //  Generated on \(Date().formatted(date: .numeric, time: .omitted)).
+        //  This file was automatically generated and should not be edited.
         //
 
         import SwiftTypedResources
@@ -155,7 +153,7 @@ struct ImagesFileGeneratorTests {
             var twoTestOne: TypedImageConfig { (name: "test-One", bundle: .module) }
             var twoTestThree: TypedImageConfig { (name: "Test.Three", bundle: .module) }
             var twoTestTwo: TypedImageConfig { (name: "_test_two", bundle: .module) }
-        }
+        }\n
         """
         let real = generator.generateFileContent(
             for: resources,

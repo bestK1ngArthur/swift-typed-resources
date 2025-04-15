@@ -18,11 +18,12 @@ public struct XCAssetsParser {
         self.fileManager = fileManager
     }
 
-    public func parse(at url: URL) throws -> ImagesResource {
+    public func parse(at url: URL, bundle: ResourceBundle) throws -> ImagesResource {
         let assets = try parseAssets(at: url)
         return .init(
             table: url.lastPathComponent,
-            assets: assets
+            assets: assets,
+            bundle: bundle
         )
     }
 

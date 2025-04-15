@@ -23,7 +23,8 @@ struct GenerateResourcesCommand: CommandPlugin {
             let arguments: [String] = [
                 path,
                 path,
-                "--resources", "images+strings"
+                "--resources", "images+strings",
+                "--bundle", "module"
             ]
 
             let process = try Process.run(toolExecutable, arguments: arguments)
@@ -55,7 +56,8 @@ extension GenerateResourcesCommand: XcodeCommandPlugin {
             let arguments: [String] = [
                 path,
                 path,
-                "--resources", "images+strings"
+                "--resources", "images+strings",
+                "--bundle", "main"
             ]
 
             let process = try Process.run(toolExecutable, arguments: arguments)
