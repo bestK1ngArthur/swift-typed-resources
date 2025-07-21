@@ -5,9 +5,11 @@ Simple Swift Package to generate typed resources (via keypath mechanism) in code
 ## Example
 
 ```swift
+struct SettingsView: View {
     var body: some View {
         Text(\.settingsDataTitle)
     }
+}
 ```
 
 ## Supported File Types
