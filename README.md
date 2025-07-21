@@ -2,6 +2,14 @@
 
 Simple Swift Package to generate typed resources (via keypath mechanism) in code such as Strings or Images. Inspired by [R.swift](https://github.com/mac-cain13/R.swift).
 
+## Example
+
+```swift
+    var body: some View {
+        Text(\.settingsDataTitle)
+    }
+```
+
 ## Supported File Types
 
 | 🔠 Strings | 🖼️ Images|
@@ -10,7 +18,7 @@ Simple Swift Package to generate typed resources (via keypath mechanism) in code
 
 ## Usage in Swift Package
 
-## Install
+### Install
 
 You can add **swift-typed-resources** to an Swift Package by adding it as a dependency.
 
@@ -39,7 +47,7 @@ let package = Package(
 )
 ```
 
-## Generate
+### Generate
 
 1. Right-click on **MyPackage** to show Xcode context menu.
 2. Then select **GenerateResources** in **swift-typed-resources** section to generate swift files.
