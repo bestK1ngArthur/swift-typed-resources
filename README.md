@@ -1,6 +1,6 @@
 # Swift Typed Resources
 
-Simple Swift Package to generate typed resources (via keypath mechanism) in code such as Strings or Images. Inspired by [R.swift](https://github.com/mac-cain13/R.swift).
+Simple Swift Package to generate typed resources (via keypath mechanism) for iOS apps in code such as Strings or Images. Inspired by [R.swift](https://github.com/mac-cain13/R.swift).
 
 ## Example
 
