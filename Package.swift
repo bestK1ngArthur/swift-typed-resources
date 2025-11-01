@@ -3,7 +3,7 @@
 import PackageDescription
 
 let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.6.1")
+    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.6.2")
 ]
 
 // MARK: - Products
